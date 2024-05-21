@@ -54,7 +54,7 @@ public class MealServlet extends HttpServlet {
             case "view":
             default:
                 log.info("getAll");
-                request.setAttribute("meals", MealsUtil.convertToMealToWithId(storage.getAll(), CALORIES_PER_DAY));
+                request.setAttribute("meals", MealsUtil.convertToMealTo(storage.getAll(), CALORIES_PER_DAY));
                 request.getRequestDispatcher("WEB-INF/meals.jsp").forward(request, response);
         }
     }
