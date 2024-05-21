@@ -29,7 +29,7 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.debug("redirect to meals");
+        log.info("redirect to meals");
 
         String action = request.getParameter("action");
         int id = 0;
@@ -60,7 +60,7 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
 
         String id = request.getParameter("id");
@@ -71,16 +71,14 @@ public class MealServlet extends HttpServlet {
         try {
             calories = Integer.parseInt(request.getParameter("calories"));
         } catch (NumberFormatException e) {
-            System.out.println("Calories can not be empty");
+            throw new ServletException("Calories parameter is not a valid integer", e);
         }
 
         Meal meal;
         if (!id.isEmpty()) {
             log.info("Edit a meal");
             meal = storage.get(Integer.parseInt(id));
-            meal.setDateTime(dateTime);
-            meal.setDescription(description);
-            meal.setCalories(calories);
+            storage.save(meal);
         } else {
             log.info("Add a meal");
             meal = new Meal(dateTime.truncatedTo(ChronoUnit.MINUTES), description, calories);
