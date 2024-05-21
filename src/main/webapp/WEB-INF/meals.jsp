@@ -58,10 +58,10 @@
     </tr>
     <c:forEach var="meal" items="${meals}">
         <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
-        <tr>
-            <td class="${meal.excess ? 'red' : 'green'}">${TimeUtil.formatDateTime(meal.dateTime)}</td>
-            <td class="${meal.excess ? 'red' : 'green'}">${meal.description}</td>
-            <td class="${meal.excess ? 'red' : 'green'}">${meal.calories}</td>
+        <tr class="${meal.excess ? 'red' : 'green'}">
+            <td>${TimeUtil.formatDateTime(meal.dateTime)}</td>
+            <td>${meal.description}</td>
+            <td>${meal.calories}</td>
             <td>
                 <div class="action-links">
                     <a href="meals?action=edit&id=${meal.id}">Update</a>
@@ -77,4 +77,5 @@
 </table>
 </body>
 </html>
+
 
