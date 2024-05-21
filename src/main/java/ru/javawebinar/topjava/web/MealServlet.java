@@ -67,7 +67,7 @@ public class MealServlet extends HttpServlet {
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
         String description = request.getParameter("description");
 
-        int calories = 0;
+        int calories;
         try {
             calories = Integer.parseInt(request.getParameter("calories"));
         } catch (NumberFormatException e) {
