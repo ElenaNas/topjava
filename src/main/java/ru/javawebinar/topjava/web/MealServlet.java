@@ -84,7 +84,7 @@ public class MealServlet extends HttpServlet {
         } else {
             log.info("Add a meal");
             meal = new Meal(dateTime.truncatedTo(ChronoUnit.MINUTES), description, calories);
-            storage.createOrUpdate(meal);
+            storage.save(meal);
         }
         response.sendRedirect(request.getContextPath() + "/meals");
     }

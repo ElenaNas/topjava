@@ -18,19 +18,17 @@ public class LocalMealStorage implements MealStorage {
     private final AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.meals.forEach(this::createOrUpdate);
+        MealsUtil.meals.forEach(this::save);
     }
 
     @Override
-    public Meal createOrUpdate(Meal meal) {
+    public Meal save(Meal meal) {
         log.info("Save " + meal);
-        Integer id = meal.getId();
-        if (id == null) {
-            id = counter.incrementAndGet();
-            meal.setId(id);
+        if (meal.getId() == null) {
+            meal.setId(counter.incrementAndGet());
+            mealMap.put(meal.getId(), meal);
         }
-        mealMap.put(id, meal);
-        return meal;
+        return mealMap.computeIfPresent(meal.getId(), (id, absentMeal) ->meal);
     }
 
     @Override
