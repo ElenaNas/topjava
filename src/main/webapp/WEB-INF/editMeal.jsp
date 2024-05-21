@@ -32,9 +32,7 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 
-<% if ("edit".equals(request.getParameter("action")))
-{ %><h2>Edit Meal</h2><% }
-else { %><h2>Add Meal</h2><% } %>
+<h2>${param.action == 'add' ? 'Add meal' : 'Edit meal'}</h2>
 
 <form method="post" action="meals" enctype="application/x-www-form-urlencoded">
     <input type="hidden" name="action" value="edit">
