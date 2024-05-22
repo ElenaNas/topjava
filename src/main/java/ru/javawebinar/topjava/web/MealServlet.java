@@ -29,7 +29,6 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.info("redirect to meals");
 
         String action = request.getParameter("action");
         int id = 0;
@@ -60,30 +59,24 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
 
         String id = request.getParameter("id");
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
         String description = request.getParameter("description");
+        int calories = Integer.parseInt(request.getParameter("calories"));
 
-        int calories;
-        try {
-            calories = Integer.parseInt(request.getParameter("calories"));
-        } catch (NumberFormatException e) {
-            throw new ServletException("Calories parameter is not a valid integer", e);
-        }
 
         Meal meal;
         if (!id.isEmpty()) {
             log.info("Edit a meal");
-            meal = storage.get(Integer.parseInt(id));
-            storage.save(meal);
+            meal = new Meal(Integer.parseInt(id), dateTime, description, calories);
         } else {
             log.info("Add a meal");
             meal = new Meal(dateTime.truncatedTo(ChronoUnit.MINUTES), description, calories);
-            storage.save(meal);
         }
+        storage.save(meal);
         response.sendRedirect(request.getContextPath() + "/meals");
     }
 }
