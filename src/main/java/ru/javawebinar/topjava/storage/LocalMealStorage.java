@@ -28,7 +28,7 @@ public class LocalMealStorage implements MealStorage {
             meal.setId(counter.incrementAndGet());
             mealMap.put(meal.getId(), meal);
         }
-        return mealMap.computeIfPresent(meal.getId(), (id, absentMeal) ->meal);
+        return mealMap.computeIfPresent(meal.getId(), (id, oldMeal) ->meal);
     }
 
     @Override

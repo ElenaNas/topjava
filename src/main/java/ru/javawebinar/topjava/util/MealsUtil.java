@@ -5,12 +5,16 @@ import ru.javawebinar.topjava.model.MealTo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static ru.javawebinar.topjava.util.TimeUtil.isBetweenHalfOpen;
 
 public class MealsUtil {
     public static List<Meal> meals;
@@ -29,16 +33,29 @@ public class MealsUtil {
         );
     }
 
-    public static void main(String[] args) {
+    public static List<MealTo> convertToMealTo(Collection<Meal> meals, int caloriesPerDay) {
+        return processMeals(meals, caloriesPerDay, null, null);
     }
 
-    public static List<MealTo> convertToMealTo(Collection<Meal> meals, int caloriesPerDay) {
-        Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
-                .collect(Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories)));
+    public static List<MealTo> filteredByStreams(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+        return processMeals(meals, caloriesPerDay, startTime, endTime);
+    }
 
-        return meals.stream()
-                .map(meal -> createToWithId(meal, caloriesSumByDate.get(meal.getDate()) > caloriesPerDay))
+    private static List<MealTo> processMeals(Collection<Meal> meals, int caloriesPerDay, LocalTime startTime, LocalTime endTime) {
+        Map<LocalDate, Integer> caloriesSumByDate = sumCaloriesByDate(meals);
+
+        Stream<Meal> mealStream = meals.stream();
+        if (startTime != null && endTime != null) {
+            mealStream = mealStream.filter(meal -> isBetweenHalfOpen(meal.getTime(), startTime, endTime));
+        }
+
+        return mealStream.map(meal -> createToWithId(meal, caloriesSumByDate.getOrDefault(meal.getDate(), 0) > caloriesPerDay))
                 .collect(Collectors.toList());
+    }
+
+    private static Map<LocalDate, Integer> sumCaloriesByDate(Collection<Meal> meals) {
+        return meals.stream()
+                .collect(Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories)));
     }
 
     private static MealTo createToWithId(Meal meal, boolean excess) {
