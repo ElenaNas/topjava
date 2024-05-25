@@ -4,7 +4,6 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
@@ -17,12 +16,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static ru.javawebinar.topjava.util.DateTimeUtil.isBetweenHalfOpenForFilter;
+
 @Repository
 public class InMemoryMealRepository implements MealRepository {
     private final Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
-    private static final Comparator<Meal> DATE_DESCENDING_COMPARATOR = Comparator.comparing(Meal::getDate).reversed();
+    private static final Comparator<Meal> MEAL_COMPARATOR = Comparator.comparing(Meal::getDate);
 
     {
         for (Meal meal : MealsUtil.meals) {
@@ -64,32 +65,16 @@ public class InMemoryMealRepository implements MealRepository {
         Map<Integer, Meal> userMeals = repository.get(userId);
         if (userMeals != null) {
             return userMeals.values().stream()
-                    .sorted(DATE_DESCENDING_COMPARATOR)
+                    .sorted(MEAL_COMPARATOR.reversed())
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
 
-    public static List<MealTo> convertAndFilter(List<Meal> mealList, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        if (mealList.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        if (startDate == null && endDate == null && startTime == null && endTime == null) {
-            return mealList.stream()
-                    .map(meal -> MealsUtil.createTo(meal, false))
-                    .collect(Collectors.toList());
-        }
-
-        LocalDate startD = startDate != null ? startDate : LocalDate.now();
-        LocalDate endD = endDate != null ? endDate : LocalDate.now();
-        LocalTime startT = startTime != null ? startTime : LocalTime.MIDNIGHT;
-        LocalTime endT = endTime != null ? endTime : LocalTime.MIDNIGHT;
-
-        return mealList.stream()
-                .filter(meal -> DateTimeUtil.isWithinDateAndTimeRange(meal, startD, endD, startT, endT))
-                .sorted(DATE_DESCENDING_COMPARATOR)
-                .map(meal -> MealsUtil.createTo(meal, false))
+    public static List<MealTo> getFilteredAndSortedTos(List<MealTo> meals, LocalTime startTime, LocalDate startDate, LocalTime endTime, LocalDate endDate) {
+        return meals.stream()
+                .filter(meal -> isBetweenHalfOpenForFilter(meal.getDateTime(), startDate, endDate, startTime, endTime))
+                .sorted(Comparator.comparing(MealTo::getDateTime).reversed())
                 .collect(Collectors.toList());
     }
 }

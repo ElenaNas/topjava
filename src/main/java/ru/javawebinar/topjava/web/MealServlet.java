@@ -17,12 +17,11 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
-import static ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository.convertAndFilter;
+import static ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository.getFilteredAndSortedTos;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
@@ -75,37 +74,52 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
+            case "all":
             case "filter":
+                log.info("filter");
+                String startDateStr = request.getParameter("startDate");
                 LocalDate startDate = null;
-                LocalDate endDate = null;
-                LocalTime startTime = null;
-                LocalTime endTime = null;
-
-                // Parse parameters for filtering
-                try {
-                    startDate = LocalDate.parse(request.getParameter("startDate"));
-                    endDate = LocalDate.parse(request.getParameter("endDate"));
-                    startTime = LocalTime.parse(request.getParameter("startTime"));
-                    endTime = LocalTime.parse(request.getParameter("endTime"));
-                } catch (DateTimeParseException e) {
-                    // Handle parsing errors, if any
-                    // You might want to log or inform the user about invalid input
+                if (startDateStr != null && !startDateStr.isEmpty()) {
+                    startDate = LocalDate.parse(startDateStr);
                 }
 
-                // Filter and convert meals
-                List<MealTo> filteredMeals = convertAndFilter(
-                        mealService.getAll(SecurityUtil.authUserId()), startDate, endDate, startTime, endTime);
+                String startTimeStr = request.getParameter("startTime");
+                LocalTime startTime = null;
+                if (startTimeStr != null && !startTimeStr.isEmpty()) {
+                    startTime = LocalTime.parse(startTimeStr);
+                }
 
-                request.setAttribute("meals", filteredMeals);
+                String endDateStr = request.getParameter("endDate");
+                LocalDate endDate = null;
+                if (endDateStr != null && !endDateStr.isEmpty()) {
+                    endDate = LocalDate.parse(endDateStr);
+                }
+
+                String endTimeStr = request.getParameter("endTime");
+                LocalTime endTime = null;
+                if (endTimeStr != null && !endTimeStr.isEmpty()) {
+                    endTime = LocalTime.parse(endTimeStr);
+                }
+
+                List<MealTo> filteredAndSortedMeals;
+                if (startDate == null && startTime == null && endDate == null && endTime == null) {
+                    filteredAndSortedMeals = MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+                } else {
+                    filteredAndSortedMeals = getFilteredAndSortedTos(
+                            MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY),
+                            startTime != null ? startTime : LocalTime.MIN,
+                            startDate != null ? startDate : LocalDate.MIN,
+                            endTime != null ? endTime : LocalTime.MAX,
+                            endDate != null ? endDate : LocalDate.now()
+                    );
+                }
+
+                request.setAttribute("meals", filteredAndSortedMeals);
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
-            case "all":
             default:
-                log.info("getAll");
-                request.setAttribute("meals",
-                        MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY));
-                request.getRequestDispatcher("/meals.jsp").forward(request, response);
-                break;
+                log.info("Unknown action: {}", action);
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown action: " + action);
         }
     }
 
