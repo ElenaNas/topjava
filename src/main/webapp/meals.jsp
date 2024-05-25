@@ -24,7 +24,6 @@
     <a href="meals?action=create">Add Meal</a>
     <br><br>
 
-    <!-- Filter Form -->
     <form action="meals" method="GET">
         <input type="hidden" name="action" value="filter">
         Start Date: <input type="date" name="startDate">
