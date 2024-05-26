@@ -33,7 +33,7 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void init() {
-        context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
+        context = new AnnotationConfigApplicationContext();
         mealService = context.getBean(MealService.class);
         mealRestController = context.getBean(MealRestController.class);
     }

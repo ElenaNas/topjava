@@ -25,7 +25,7 @@ public class UserServlet extends HttpServlet {
 
     @Override
     public void init() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext();
         userService = context.getBean(UserService.class);
         mealService = context.getBean(MealService.class);
     }
