@@ -7,7 +7,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,11 +27,15 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
     private MealService mealService;
+    private ApplicationContext context;
+    private MealRestController mealRestController;
+
 
     @Override
     public void init() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
+        context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
         mealService = context.getBean(MealService.class);
+        mealRestController = context.getBean(MealRestController.class);
     }
 
     @Override
@@ -39,13 +43,22 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
 
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                LocalDateTime.parse(request.getParameter("dateTime")),
-                request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")));
+        LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
+        String description = request.getParameter("description");
+        int calories = Integer.parseInt(request.getParameter("calories"));
+
+        Meal meal;
+
+        if (id == null || id.isEmpty()) {
+            meal = new Meal(null, dateTime, description, calories);
+            mealRestController.create(meal);
+        } else {
+            int mealId = Integer.parseInt(id);
+            meal = new Meal(mealId, dateTime, description, calories);
+            mealRestController.update(meal, mealId);
+        }
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-        mealService.create(SecurityUtil.authUserId(), meal);
         response.sendRedirect("meals");
     }
 
@@ -56,14 +69,15 @@ public class MealServlet extends HttpServlet {
         switch (action == null ? "all" : action) {
             case "delete":
                 log.info("Delete id={}", getMealId(request));
-                mealService.delete(SecurityUtil.authUserId(),getMealId(request));
+                int id = getMealId(request);
+                mealRestController.delete(id);
                 response.sendRedirect("meals");
                 break;
             case "create":
             case "update":
                 final Meal meal = "create".equals(action) ?
                         new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                        mealService.get(SecurityUtil.authUserId(), getMealId(request));
+                        mealRestController.get(getMealId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
@@ -96,14 +110,14 @@ public class MealServlet extends HttpServlet {
 
                 List<MealTo> filteredAndSortedMeals;
                 if (startDate == null && startTime == null && endDate == null && endTime == null) {
-                    filteredAndSortedMeals = MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+                    filteredAndSortedMeals =mealRestController.getAll();
                 } else {
                     filteredAndSortedMeals = getFilteredAndSortedTos(
-                            MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY),
+                            mealRestController.getAll(),
                             startTime != null ? startTime : LocalTime.MIN,
                             startDate != null ? startDate : LocalDate.MIN,
                             endTime != null ? endTime : LocalTime.MAX,
-                            endDate != null ? endDate : LocalDate.now()
+                            endDate != null ? endDate : LocalDate.MAX
                     );
                 }
 
@@ -124,7 +138,6 @@ public class MealServlet extends HttpServlet {
     @Override
     public void destroy() {
         log.info("Closing MealServlet and performing cleanup tasks...");
-
         super.destroy();
     }
 }

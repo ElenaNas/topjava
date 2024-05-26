@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository;
 import ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepository;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.UserService;
+import ru.javawebinar.topjava.web.meal.MealRestController;
 
 @Configuration
 @ComponentScan(basePackages = "ru.javawebinar.topjava.service")
@@ -33,4 +34,10 @@ public class SpringConfiguration {
     public UserService userService(UserRepository userRepository){
         return new UserService(userRepository);
     }
+
+    @Bean
+    public MealRestController mealRestController(MealService mealService){
+        return new MealRestController(mealService);
+    }
+
 }
