@@ -33,43 +33,31 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public synchronized Meal save(int userId, Meal meal) {
-        if (meal.isNew()) {
-            meal.setId(counter.incrementAndGet());
-        }
+    public Meal save(int userId, Meal meal) {
+        meal.setId(meal.isNew() ? counter.getAndIncrement() : userId);
         repository.computeIfAbsent(userId, k -> new ConcurrentHashMap<>())
                 .put(meal.getId(), meal);
-
         return meal;
     }
 
     @Override
-    public synchronized boolean delete(int userId, int id) {
+    public boolean delete(int userId, int id) {
         Map<Integer, Meal> userMeals = repository.get(userId);
-        if (userMeals != null) {
-            return userMeals.remove(id) != null;
-        }
-        return false;
+        return userMeals != null && userMeals.remove(id) != null;
     }
 
     @Override
     public Meal get(int userId, int id) {
         Map<Integer, Meal> userMeals = repository.get(userId);
-        if (userMeals != null) {
-            return userMeals.get(id);
-        }
-        return null;
+        return userMeals != null ? userMeals.get(id) : null;
     }
 
     @Override
     public List<Meal> getAll(int userId) {
         Map<Integer, Meal> userMeals = repository.get(userId);
-        if (userMeals != null) {
-            return userMeals.values().stream()
-                    .sorted(MEAL_COMPARATOR.reversed())
-                    .collect(Collectors.toList());
-        }
-        return Collections.emptyList();
+        return userMeals != null ? userMeals.values().stream()
+                .sorted(MEAL_COMPARATOR.reversed())
+                .collect(Collectors.toList()) : Collections.emptyList();
     }
 }
 
