@@ -11,6 +11,8 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static ru.javawebinar.topjava.util.DateTimeUtil.isBetweenHalfOpenForFilter;
+
 public class MealsUtil {
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;
 
@@ -48,5 +50,12 @@ public class MealsUtil {
 
     public static MealTo createTo(Meal meal, boolean excess) {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
+    }
+
+    public static List<MealTo> getFilteredAndSortedTos(List<MealTo> meals, LocalTime startTime, LocalDate startDate, LocalTime endTime, LocalDate endDate) {
+        return meals.stream()
+                .filter(meal -> isBetweenHalfOpenForFilter(meal.getDateTime(), startDate, endDate, startTime, endTime))
+                .sorted(Comparator.comparing(MealTo::getDateTime).reversed())
+                .collect(Collectors.toList());
     }
 }

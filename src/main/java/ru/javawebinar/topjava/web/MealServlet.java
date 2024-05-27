@@ -20,7 +20,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
-import static ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository.getFilteredAndSortedTos;
+import static ru.javawebinar.topjava.util.MealsUtil.getFilteredAndSortedTos;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
