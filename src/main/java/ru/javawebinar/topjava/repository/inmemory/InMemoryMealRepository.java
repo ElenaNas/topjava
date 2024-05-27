@@ -21,8 +21,14 @@ public class InMemoryMealRepository implements MealRepository {
     private static final Comparator<Meal> MEAL_COMPARATOR = Comparator.comparing(Meal::getDate);
 
     {
-        for (Meal meal : MealsUtil.meals) {
+        for (Meal meal : MealsUtil.meals1) {
             save(1, meal);
+        }
+    }
+
+    {
+        for (Meal meal : MealsUtil.meals2) {
+            save(2, meal);
         }
     }
 

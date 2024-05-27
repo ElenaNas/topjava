@@ -12,12 +12,16 @@ public class DateTimeUtil {
         return lt.compareTo(startTime) >= 0 && lt.compareTo(endTime) < 0;
     }
 
-    public static boolean isBetweenHalfOpenForFilter(LocalDateTime ldt, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
-        LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
-
-        return ldt.compareTo(startDateTime) >= 0 && ldt.compareTo(endDateTime) < 0;
+    public static boolean isWithinDateRange(LocalDateTime dateTime, LocalDate startDate, LocalDate endDate) {
+        return (startDate == null || dateTime.toLocalDate().compareTo(startDate) >= 0)
+                && (endDate == null || dateTime.toLocalDate().compareTo(endDate) <= 0);
     }
+
+    public static boolean isWithinTimeRange(LocalTime time, LocalTime startTime, LocalTime endTime) {
+        return (startTime == null || time.compareTo(startTime) >= 0)
+                && (endTime == null || time.compareTo(endTime) <= 0);
+    }
+
     public static String toString(LocalDateTime ldt) {
         return ldt == null ? "" : ldt.format(DATE_TIME_FORMATTER);
     }

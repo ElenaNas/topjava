@@ -26,12 +26,13 @@
 
     <form action="meals" method="GET">
         <input type="hidden" name="action" value="filter">
-        Start Date: <input type="date" name="startDate">
-        End Date: <input type="date" name="endDate">
-        Start Time: <input type="time" name="startTime">
-        End Time: <input type="time" name="endTime">
+        Start Date: <input type="date" name="startDate" value="${empty param.startDate ? '' : param.startDate}">
+        End Date: <input type="date" name="endDate" value="${empty param.endDate ? '' : param.endDate}">
+        Start Time: <input type="time" name="startTime" value="${empty param.startTime ? '' : param.startTime}">
+        End Time: <input type="time" name="endTime" value="${empty param.endTime ? '' : param.endTime}">
         <input type="submit" value="Filter">
     </form>
+
 
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
