@@ -7,7 +7,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -54,7 +57,6 @@ public class MealsUtil {
     public static List<MealTo> getFilteredAndSortedTos(List<MealTo> meals, LocalTime startTime, LocalDate startDate, LocalTime endTime, LocalDate endDate) {
         return meals.stream()
                 .filter(meal -> isBetweenHalfOpenForFilter(meal.getDateTime(), startDate, endDate, startTime, endTime))
-                .sorted(Comparator.comparing(MealTo::getDateTime).reversed())
                 .collect(Collectors.toList());
     }
 }

@@ -2,7 +2,7 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
@@ -20,10 +20,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
+
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
-    private ApplicationContext context;
+    private ConfigurableApplicationContext context;
     private MealRestController mealRestController;
 
 
@@ -78,30 +81,11 @@ public class MealServlet extends HttpServlet {
                 break;
             case "all":
             case "filter":
-                log.info("filter");
-                String startDateStr = request.getParameter("startDate");
-                LocalDate startDate = null;
-                if (startDateStr != null && !startDateStr.isEmpty()) {
-                    startDate = LocalDate.parse(startDateStr);
-                }
-
-                String startTimeStr = request.getParameter("startTime");
-                LocalTime startTime = null;
-                if (startTimeStr != null && !startTimeStr.isEmpty()) {
-                    startTime = LocalTime.parse(startTimeStr);
-                }
-
-                String endDateStr = request.getParameter("endDate");
-                LocalDate endDate = null;
-                if (endDateStr != null && !endDateStr.isEmpty()) {
-                    endDate = LocalDate.parse(endDateStr);
-                }
-
-                String endTimeStr = request.getParameter("endTime");
-                LocalTime endTime = null;
-                if (endTimeStr != null && !endTimeStr.isEmpty()) {
-                    endTime = LocalTime.parse(endTimeStr);
-                }
+                log.info("all/filter");
+                LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
+                LocalTime startTime=parseLocalTime(request.getParameter("startTime"));
+                LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
+                LocalTime endTime=parseLocalTime(request.getParameter("endTime"));
 
                 List<MealTo> filteredAndSortedMeals;
                 if (startDate == null && startTime == null && endDate == null && endTime == null) {
@@ -121,7 +105,7 @@ public class MealServlet extends HttpServlet {
                 break;
             default:
                 log.info("Unknown action: {}", action);
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown action: " + action);
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
     }
 
@@ -133,6 +117,6 @@ public class MealServlet extends HttpServlet {
     @Override
     public void destroy() {
         log.info("Closing MealServlet and performing cleanup tasks...");
-        super.destroy();
+        context.close();
     }
 }
