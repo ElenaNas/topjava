@@ -20,8 +20,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
-import static ru.javawebinar.topjava.util.MealsUtil.getFilteredAndSortedTos;
-
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
@@ -107,15 +105,15 @@ public class MealServlet extends HttpServlet {
 
                 List<MealTo> filteredAndSortedMeals;
                 if (startDate == null && startTime == null && endDate == null && endTime == null) {
-                    filteredAndSortedMeals =mealRestController.getAll();
+                    filteredAndSortedMeals = mealRestController.getAll();
                 } else {
-                    filteredAndSortedMeals = getFilteredAndSortedTos(
-                            mealRestController.getAll(),
-                            startTime != null ? startTime : LocalTime.MIN,
-                            startDate != null ? startDate : LocalDate.MIN,
-                            endTime != null ? endTime : LocalTime.MAX,
-                            endDate != null ? endDate : LocalDate.MAX
-                    );
+                    filteredAndSortedMeals =
+                            mealRestController.filter(
+                                    startDate != null ? startDate : LocalDate.MIN,
+                                    startTime != null ? startTime : LocalTime.MIN,
+                                    endDate != null ? endDate : LocalDate.MAX,
+                                    endTime != null ? endTime : LocalTime.MAX
+                            );
                 }
 
                 request.setAttribute("meals", filteredAndSortedMeals);
