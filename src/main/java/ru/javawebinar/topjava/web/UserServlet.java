@@ -3,10 +3,9 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.service.UserService;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,14 +19,13 @@ import java.util.List;
 public class UserServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(UserServlet.class);
 
-    private UserService userService;
-    private MealService mealService;
+    private ApplicationContext context;
+    private MealRestController mealRestController;
 
     @Override
     public void init() {
-        ApplicationContext context = new AnnotationConfigApplicationContext();
-        userService = context.getBean(UserService.class);
-        mealService = context.getBean(MealService.class);
+      context = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+      mealRestController=context.getBean(MealRestController.class);
     }
 
     @Override
@@ -35,13 +33,12 @@ public class UserServlet extends HttpServlet {
 
     }
 
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int userId = SecurityUtil.authUserId();
         SecurityUtil.setAuthUserId(userId);
 
-        List<Meal> mealList = mealService.getAll(userId);
+        List<MealTo> mealList = mealRestController.getAll();
         request.setAttribute("meals", mealList);
         response.sendRedirect(request.getContextPath() + "/meals");
     }

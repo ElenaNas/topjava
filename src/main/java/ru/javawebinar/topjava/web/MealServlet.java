@@ -3,9 +3,8 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -26,15 +25,13 @@ import static ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository.
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
-    private MealService mealService;
     private ApplicationContext context;
     private MealRestController mealRestController;
 
 
     @Override
     public void init() {
-        context = new AnnotationConfigApplicationContext();
-        mealService = context.getBean(MealService.class);
+        context = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         mealRestController = context.getBean(MealRestController.class);
     }
 
