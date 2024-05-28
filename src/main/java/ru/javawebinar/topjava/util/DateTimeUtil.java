@@ -19,7 +19,7 @@ public class DateTimeUtil {
 
     public static boolean isWithinTimeRange(LocalTime time, LocalTime startTime, LocalTime endTime) {
         return (startTime == null || time.compareTo(startTime) >= 0)
-                && (endTime == null || time.compareTo(endTime) <= 0);
+                && (endTime == null || time.compareTo(endTime) < 0);
     }
 
     public static String toString(LocalDateTime ldt) {
