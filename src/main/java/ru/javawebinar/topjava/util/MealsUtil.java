@@ -7,11 +7,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static ru.javawebinar.topjava.util.DateTimeUtil.*;
+import static ru.javawebinar.topjava.util.DateTimeUtil.isBetweenHalfOpen;
 
 public class MealsUtil {
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;
@@ -54,33 +57,10 @@ public class MealsUtil {
         return meals.stream()
                 .filter(filter)
                 .map(meal -> createTo(meal, caloriesSumByDate.get(meal.getDate()) > caloriesPerDay))
-                .sorted(Comparator.comparing(MealTo::getDateTime).reversed())
                 .collect(Collectors.toList());
     }
 
     public static MealTo createTo(Meal meal, boolean excess) {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
-    }
-
-    public static List<MealTo> getFilteredAndSortedTos(List<Meal> meals, LocalTime startTime, LocalDate startDate, LocalTime endTime, LocalDate endDate) {
-        Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
-                .collect(Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories)));
-
-        List<MealTo> mealTos = meals.stream()
-                .map(meal -> createTo(meal, caloriesSumByDate.getOrDefault(meal.getDate(), 0) > DEFAULT_CALORIES_PER_DAY))
-                .collect(Collectors.toList());
-
-        if (startDate == null && endDate == null && startTime != null && endTime != null) {
-            return mealTos.stream()
-                    .filter(meal -> isWithinTimeRange(meal.getDateTime().toLocalTime(), startTime, endTime))
-                    .sorted(Comparator.comparing(MealTo::getDateTime).reversed())
-                    .collect(Collectors.toList());
-        }
-
-        return mealTos.stream()
-                .filter(meal -> isWithinDateRange(meal.getDateTime(), startDate, endDate))
-                .filter(meal -> isWithinTimeRange(meal.getDateTime().toLocalTime(), startTime, endTime))
-                .sorted(Comparator.comparing(MealTo::getDateTime).reversed())
-                .collect(Collectors.toList());
     }
 }
