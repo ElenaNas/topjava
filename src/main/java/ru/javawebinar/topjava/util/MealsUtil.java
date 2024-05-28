@@ -62,15 +62,22 @@ public class MealsUtil {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 
-    public static List<MealTo> getFilteredAndSortedTos(List<MealTo> meals, LocalTime startTime, LocalDate startDate, LocalTime endTime, LocalDate endDate) {
+    public static List<MealTo> getFilteredAndSortedTos(List<Meal> meals, LocalTime startTime, LocalDate startDate, LocalTime endTime, LocalDate endDate) {
+        Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
+                .collect(Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories)));
+
+        List<MealTo> mealTos = meals.stream()
+                .map(meal -> createTo(meal, caloriesSumByDate.getOrDefault(meal.getDate(), 0) > DEFAULT_CALORIES_PER_DAY))
+                .collect(Collectors.toList());
+
         if (startDate == null && endDate == null && startTime != null && endTime != null) {
-            return meals.stream()
+            return mealTos.stream()
                     .filter(meal -> isWithinTimeRange(meal.getDateTime().toLocalTime(), startTime, endTime))
                     .sorted(Comparator.comparing(MealTo::getDateTime).reversed())
                     .collect(Collectors.toList());
         }
 
-        return meals.stream()
+        return mealTos.stream()
                 .filter(meal -> isWithinDateRange(meal.getDateTime(), startDate, endDate))
                 .filter(meal -> isWithinTimeRange(meal.getDateTime().toLocalTime(), startTime, endTime))
                 .sorted(Comparator.comparing(MealTo::getDateTime).reversed())

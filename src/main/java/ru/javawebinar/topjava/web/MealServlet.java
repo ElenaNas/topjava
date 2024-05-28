@@ -64,7 +64,7 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
-        switch (action == null ? "all" : action) {
+        switch (action == null ? "default" : action) {
             case "delete":
                 log.info("Delete id={}", getMealId(request));
                 int id = getMealId(request);
@@ -87,25 +87,17 @@ public class MealServlet extends HttpServlet {
                 LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
                 LocalTime endTime=parseLocalTime(request.getParameter("endTime"));
 
-                List<MealTo> filteredAndSortedMeals;
-                if (startDate == null && startTime == null && endDate == null && endTime == null) {
-                    filteredAndSortedMeals = mealRestController.getAll();
-                } else {
-                    filteredAndSortedMeals =
-                            mealRestController.filter(
-                                    startDate != null ? startDate : LocalDate.MIN,
-                                    startTime != null ? startTime : LocalTime.MIN,
-                                    endDate != null ? endDate : LocalDate.MAX,
-                                    endTime != null ? endTime : LocalTime.MAX
-                            );
-                }
+                List<MealTo> filteredAndSortedMeals = mealRestController.getTimeDateFilteredMeals(startDate, startTime, endDate, endTime);
 
                 request.setAttribute("meals", filteredAndSortedMeals);
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
-            default:
+            case "default":
                 log.info("Unknown action: {}", action);
+                request.setAttribute("meals", mealRestController.getAll());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
+                break;
+
         }
     }
 

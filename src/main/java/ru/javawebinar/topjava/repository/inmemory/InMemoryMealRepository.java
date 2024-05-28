@@ -1,10 +1,12 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -34,10 +36,13 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public Meal save(int userId, Meal meal) {
-        meal.setId(meal.isNew() ? counter.getAndIncrement() : userId);
-        repository.computeIfAbsent(userId, k -> new ConcurrentHashMap<>())
-                .put(meal.getId(), meal);
-        return meal;
+        Map<Integer, Meal> userMeals = repository.computeIfAbsent(userId, id -> new ConcurrentHashMap<>());
+        if (meal.isNew()) {
+            meal.setId(counter.incrementAndGet());
+            userMeals.put(meal.getId(), meal);
+            return meal;
+        }
+        return userMeals.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @Override
@@ -55,9 +60,18 @@ public class InMemoryMealRepository implements MealRepository {
     @Override
     public List<Meal> getAll(int userId) {
         Map<Integer, Meal> userMeals = repository.get(userId);
-        return userMeals != null ? userMeals.values().stream()
+        return CollectionUtils.isEmpty(userMeals) ? Collections.emptyList() : userMeals.values().stream()
                 .sorted(MEAL_COMPARATOR.reversed())
-                .collect(Collectors.toList()) : Collections.emptyList();
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Meal> getFilteredByDates(LocalDate startDate, LocalDate endDate, int userId) {
+        List<Meal> userMeals = getAll(userId);
+
+        return userMeals.stream()
+                .filter(meal -> !meal.getDate().isBefore(startDate) && !meal.getDate().isAfter(endDate))
+                .collect(Collectors.toList());
     }
 }
 
