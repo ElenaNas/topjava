@@ -64,7 +64,7 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
-        switch (action == null ? "default" : action) {
+        switch (action == null ? "all" : action) {
             case "delete":
                 log.info("Delete id={}", getMealId(request));
                 int id = getMealId(request);
@@ -79,25 +79,24 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
-            case "all":
             case "filter":
                 log.info("all/filter");
                 LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
-                LocalTime startTime=parseLocalTime(request.getParameter("startTime"));
+                LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
                 LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
-                LocalTime endTime=parseLocalTime(request.getParameter("endTime"));
+                LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
 
                 List<MealTo> filteredAndSortedMeals = mealRestController.getTimeDateFilteredMeals(startDate, startTime, endDate, endTime);
 
                 request.setAttribute("meals", filteredAndSortedMeals);
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
-            case "default":
+            case "all":
+            default:
                 log.info("Unknown action: {}", action);
                 request.setAttribute("meals", mealRestController.getAll());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
-
         }
     }
 
