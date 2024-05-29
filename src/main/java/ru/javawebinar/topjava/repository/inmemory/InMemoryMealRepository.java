@@ -22,15 +22,10 @@ public class InMemoryMealRepository implements MealRepository {
     private final Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
 
-    private static final Comparator<Meal> MEAL_COMPARATOR = Comparator.comparing(Meal::getDate);
-
     {
         for (Meal meal : MealsUtil.meals1) {
             save(1, meal);
         }
-    }
-
-    {
         for (Meal meal : MealsUtil.meals2) {
             save(2, meal);
         }
@@ -75,7 +70,6 @@ public class InMemoryMealRepository implements MealRepository {
                 userMeals.values().stream().filter(filter)
                         .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                         .collect(Collectors.toList());
-
     }
 }
 

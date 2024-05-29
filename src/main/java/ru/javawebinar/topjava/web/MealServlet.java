@@ -66,13 +66,14 @@ public class MealServlet extends HttpServlet {
 
         switch (action == null ? "all" : action) {
             case "delete":
-                log.info("Delete id={}", getMealId(request));
+                log.info("delete id={}", getMealId(request));
                 int id = getMealId(request);
                 mealRestController.delete(id);
                 response.sendRedirect("meals");
                 break;
             case "create":
             case "update":
+                log.info("create/update id={}", getMealId(request));
                 final Meal meal = "create".equals(action) ?
                         new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
                         mealRestController.get(getMealId(request));
@@ -86,6 +87,7 @@ public class MealServlet extends HttpServlet {
                 LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
                 LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
 
+                log.info("filer by time/date");
                 List<MealTo> filteredAndSortedMeals = mealRestController.getTimeDateFilteredMeals(startDate, startTime, endDate, endTime);
 
                 request.setAttribute("meals", filteredAndSortedMeals);
