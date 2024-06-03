@@ -39,11 +39,11 @@ public class JdbcMealRepository implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        Timestamp timestamp = Timestamp.valueOf(meal.getDateTime());
+        LocalDateTime dateTime=meal.getDateTime();
 
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", meal.getId())
-                .addValue("dateTime", timestamp)
+                .addValue("dateTime", dateTime)
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
                 .addValue("userId", userId);

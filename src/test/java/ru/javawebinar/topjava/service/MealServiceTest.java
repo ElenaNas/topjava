@@ -13,8 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 
 import static org.junit.Assert.assertThrows;
@@ -52,7 +50,7 @@ public class MealServiceTest extends TestCase {
     @Test
     public void getAll() {
         List<Meal> all = service.getAll(USER_ID);
-        assertMatch(all, meal3, meal2, meal1);
+        assertMatch(all, meal6, meal5, meal4, meal3, meal2, meal1);
     }
 
     @Test
@@ -98,6 +96,6 @@ public class MealServiceTest extends TestCase {
     @Test
     public void duplicateDateTimeCreate() {
         assertThrows(DataAccessException.class, () ->
-                service.create(new Meal(null, LocalDateTime.of(2024, Month.JUNE, 1, 8, 0), "Coffee break", 200), USER_ID));
+                service.create(new Meal(null, meal1.getDateTime(), "Coffee break", 200), USER_ID));
     }
 }
