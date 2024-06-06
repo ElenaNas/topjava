@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,8 +9,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.javawebinar.topjava.TestNameAndTimeLogger;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.rules.StopwatchRule;
+import ru.javawebinar.topjava.rules.SummaryRule;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
@@ -35,7 +35,10 @@ public class MealServiceTest {
     private MealService service;
 
     @Rule
-    public TestNameAndTimeLogger timeLogger = new TestNameAndTimeLogger();
+    public StopwatchRule stopwatch = new StopwatchRule();
+
+    @Rule
+    public SummaryRule summaryRule = new SummaryRule();
 
     @Test
     public void delete() {
@@ -114,10 +117,5 @@ public class MealServiceTest {
     @Test
     public void getBetweenWithNullDates() {
         MEAL_MATCHER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), meals);
-    }
-
-    @After
-    public void logSummary() {
-        timeLogger.logSummary();
     }
 }
