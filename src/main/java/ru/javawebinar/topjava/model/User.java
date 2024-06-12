@@ -25,6 +25,10 @@ public class User extends AbstractNamedEntity {
     public static final String BY_EMAIL = "User.getByEmail";
     public static final String ALL_SORTED = "User.getAllSorted";
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OrderBy("dateTime DESC")
+    private List<Meal> meals;
+
     @Column(name = "email", nullable = false, unique = true)
     @Email
     @NotBlank
@@ -109,6 +113,18 @@ public class User extends AbstractNamedEntity {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public List<Meal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<Meal> meals) {
+        this.meals = meals;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public Set<Role> getRoles() {

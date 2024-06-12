@@ -3,7 +3,9 @@ package ru.javawebinar.topjava.service;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -98,5 +100,12 @@ public class MealServiceTest extends AbstractServiceTest {
     @Test
     public void getBetweenWithNullDates() {
         MEAL_MATCHER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), meals);
+    }
+
+    @Test
+    @Profile(Profiles.DATAJPA)
+    public void getUserAndMeals() {
+        Meal meal = service.getMealsAndUserById(ADMIN_MEAL_ID, ADMIN_ID);
+        MEAL_MATCHER.assertMatch(meal, adminMeal1);
     }
 }

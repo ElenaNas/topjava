@@ -1,8 +1,12 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
+import ru.javawebinar.topjava.MealTestData;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -11,6 +15,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.util.List;
 
 import static org.junit.Assert.assertThrows;
+import static ru.javawebinar.topjava.MealTestData.MEAL_MATCHER;
 import static ru.javawebinar.topjava.UserTestData.*;
 
 public class UserServiceTest extends AbstractServiceTest {
@@ -73,5 +78,20 @@ public class UserServiceTest extends AbstractServiceTest {
     public void getAll() {
         List<User> all = service.getAll();
         USER_MATCHER.assertMatch(all, admin, guest, user);
+    }
+
+    @Test
+    @Profile(Profiles.DATAJPA)
+    public void getUserById() {
+        User user = service.getUserById(USER_ID);
+        MEAL_MATCHER.assertMatch(user.getMeals(), MealTestData.meals);
+
+    }
+
+    @Test
+    @Profile(Profiles.DATAJPA)
+    public void getNotFoundUserById() {
+        Assert.assertThrows(NotFoundException.class,
+                () -> service.getUserById(NOT_FOUND));
     }
 }
