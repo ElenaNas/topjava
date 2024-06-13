@@ -47,15 +47,9 @@ public abstract class AbstractServiceTest {
         protected void finished(long nanos, Description description) {
             String result = String.format("\n%-25s %7d", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
             log.info(result + " ms\n");
-            appendResult(result);
-        }
-    };
-
-    private static void appendResult(String result) {
-        synchronized (AbstractServiceTest.class) {
             results.append(result);
         }
-    }
+    };
 
     @AfterClass
     public static void printResult() {
