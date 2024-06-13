@@ -104,8 +104,8 @@ public class MealServiceTest extends AbstractServiceTest {
 
     @Test
     @Profile(Profiles.DATAJPA)
-    public void getUserAndMeals() {
-        Meal meal = service.getMealsAndUserById(ADMIN_MEAL_ID, ADMIN_ID);
+    public void getMealAndUserById() {
+        Meal meal = service.getMealAndUserById(ADMIN_MEAL_ID, ADMIN_ID);
         MEAL_MATCHER.assertMatch(meal, adminMeal1);
     }
 }

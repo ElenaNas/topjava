@@ -14,7 +14,7 @@ import java.util.List;
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
     @Query("SELECT m FROM Meal m JOIN FETCH m.user WHERE m.id = ?1 and m.user.id = ?2")
-    Meal getMealsAndUserById(int id, int userId);
+    Meal getMealAndUserById(int id, int userId);
 
     @Transactional
     @Modifying
@@ -23,9 +23,9 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
     @Modifying
     @Query("SELECT m FROM Meal m WHERE m.user.id=:user_id " +
-            "AND m.dateTime >= :start_Date_Time AND m.dateTime < :end_Date_Time " +
+            "AND m.dateTime >= :start_date_time AND m.dateTime < :end_date_time " +
             "ORDER BY m.dateTime DESC")
-    List<Meal> getBetweenHalfOpen(@Param("start_Date_Time") LocalDateTime startDateTime, @Param("end_Date_Time") LocalDateTime endDateTime, @Param("user_id") int userId);
+    List<Meal> getBetweenHalfOpen(@Param("start_date_time") LocalDateTime startDateTime, @Param("end_date_time") LocalDateTime endDateTime, @Param("user_id") int userId);
 
     @Modifying
     @Query("SELECT m FROM Meal m WHERE m.user.id=:user_id ORDER BY m.dateTime DESC")

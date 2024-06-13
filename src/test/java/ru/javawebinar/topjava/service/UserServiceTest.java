@@ -82,16 +82,16 @@ public class UserServiceTest extends AbstractServiceTest {
 
     @Test
     @Profile(Profiles.DATAJPA)
-    public void getUserById() {
-        User user = service.getUserById(USER_ID);
+    public void getUserWithMealsById() {
+        User user = service.getUserWithMealsById(USER_ID);
         MEAL_MATCHER.assertMatch(user.getMeals(), MealTestData.meals);
 
     }
 
     @Test
     @Profile(Profiles.DATAJPA)
-    public void getNotFoundUserById() {
+    public void getNotFoundUserWithMealsById() {
         Assert.assertThrows(NotFoundException.class,
-                () -> service.getUserById(NOT_FOUND));
+                () -> service.getUserWithMealsById(NOT_FOUND));
     }
 }
