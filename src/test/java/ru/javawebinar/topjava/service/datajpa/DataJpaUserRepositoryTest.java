@@ -24,12 +24,12 @@ public class DataJpaUserRepositoryTest extends AbstractUserServiceTest {
     @Test
     public void getNotFoundUserWithMealsById() {
         Assert.assertThrows(NotFoundException.class,
-                () -> service.getUserWithMealsById(NOT_FOUND));
+                () -> service.getUserAndMealsById(NOT_FOUND));
     }
 
     @Test
-    public void getUserWithMealsById() {
-        User user = service.getUserWithMealsById(USER_ID);
+    public void getUserAndMealsById() {
+        User user = service.getUserAndMealsById(USER_ID);
         MEAL_MATCHER.assertMatch(user.getMeals(), MealTestData.meals);
 
     }
