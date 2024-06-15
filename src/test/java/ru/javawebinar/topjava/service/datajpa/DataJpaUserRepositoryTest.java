@@ -6,14 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.Profiles;
+import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.AbstractUserServiceTest;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import static ru.javawebinar.topjava.MealTestData.MEAL_MATCHER;
-import static ru.javawebinar.topjava.UserTestData.NOT_FOUND;
-import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static ru.javawebinar.topjava.UserTestData.*;
 
 @ActiveProfiles(Profiles.DATAJPA)
 public class DataJpaUserRepositoryTest extends AbstractUserServiceTest {
@@ -31,6 +31,6 @@ public class DataJpaUserRepositoryTest extends AbstractUserServiceTest {
     public void getUserAndMealsById() {
         User user = service.getUserAndMealsById(USER_ID);
         MEAL_MATCHER.assertMatch(user.getMeals(), MealTestData.meals);
-
+        USER_MATCHER.assertMatch(user, UserTestData.user);
     }
 }
