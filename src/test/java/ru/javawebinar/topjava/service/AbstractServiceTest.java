@@ -38,7 +38,6 @@ public abstract class AbstractServiceTest {
     @Before
     public void setup() {
         cacheManager.getCache("users").clear();
-        cacheManager.getCache("meal").clear();
     }
 
     @Rule
