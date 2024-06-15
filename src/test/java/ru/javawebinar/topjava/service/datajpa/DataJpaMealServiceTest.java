@@ -16,7 +16,7 @@ import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.*;
 
 @ActiveProfiles(Profiles.DATAJPA)
-public class DataJpaMealRepositoryTest extends AbstractMealServiceTest {
+public class DataJpaMealServiceTest extends AbstractMealServiceTest {
 
     @Autowired
     private MealService service;
