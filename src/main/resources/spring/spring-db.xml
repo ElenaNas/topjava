@@ -16,7 +16,7 @@
         <jdbc:script encoding="utf-8" location="classpath:db/populateDB.sql"/>
     </jdbc:initialize-database>
 
-    <beans profile="jpa">
+    <beans profile="datajpa, jpa">
         <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
               p:dataSource-ref="dataSource"
               p:packagesToScan="ru.javawebinar.**.model">
@@ -36,41 +36,18 @@
         <tx:annotation-driven/>
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
               p:entityManagerFactory-ref="entityManagerFactory"/>
+    </beans>
 
+    <beans profile="jpa">
         <context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>
     </beans>
 
     <beans profile="datajpa">
-        <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-              p:dataSource-ref="dataSource"
-              p:packagesToScan="ru.javawebinar.**.model">
-            <property name="jpaPropertyMap">
-                <map>
-                    <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>
-                    <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}" value="${hibernate.use_sql_comments}"/>
-                    <entry key="#{T(org.hibernate.cfg.AvailableSettings).JPA_PROXY_COMPLIANCE}" value="false"/>
-                </map>
-            </property>
-            <property name="jpaVendorAdapter">
-                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
-                      p:showSql="${jpa.showSql}"/>
-            </property>
-        </bean>
-
-        <tx:annotation-driven/>
-        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
-              p:entityManagerFactory-ref="entityManagerFactory"/>
-
         <context:component-scan base-package="ru.javawebinar.**.repository.datajpa"/>
         <jpa:repositories base-package="ru.javawebinar.**.repository.datajpa"/>
     </beans>
 
     <beans profile="postgres">
-        <!--
-            For postgres driver logging
-            It uses java.util.logging and logged via jul-to-slf4j bridge
-            https://stackoverflow.com/a/27296470/548473
-        -->
         <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
             <property name="staticMethod" value="org.slf4j.bridge.SLF4JBridgeHandler.install"/>
         </bean>
@@ -88,7 +65,6 @@
     <beans profile="hsqldb">
         <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>
 
-        <!--no pooling-->
         <bean id="dataSource"
               class="org.springframework.jdbc.datasource.DriverManagerDataSource"
               p:driverClassName="org.hsqldb.jdbcDriver"
@@ -107,5 +83,4 @@
             <constructor-arg ref="jdbcTemplate"/>
         </bean>
     </beans>
-
 </beans>
