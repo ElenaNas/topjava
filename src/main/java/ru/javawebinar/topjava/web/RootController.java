@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.UserService;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,10 +20,26 @@ public class RootController {
     @Autowired
     private UserService service;
 
+    @Autowired
+    private MealService mealService;
+
+    public RootController(UserService service, MealService mealService) {
+        this.service = service;
+        this.mealService = mealService;
+    }
+
     @GetMapping("/")
     public String root() {
         log.info("root");
         return "index";
+    }
+
+    @GetMapping("/meals")
+    public String getAll(Model model) {
+        log.info("meals");
+        model.addAttribute("meals",
+                MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay()));
+        return "meals";
     }
 
     @GetMapping("/users")
