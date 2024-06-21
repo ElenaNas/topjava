@@ -14,6 +14,7 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
+import javax.validation.*;
 import java.sql.Types;
 import java.util.*;
 
@@ -29,6 +30,8 @@ public class JdbcUserRepository implements UserRepository {
 
     private final SimpleJdbcInsert insertUser;
 
+    private final Validator validator;
+
     @Autowired
     public JdbcUserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.insertUser = new SimpleJdbcInsert(jdbcTemplate)
@@ -37,11 +40,19 @@ public class JdbcUserRepository implements UserRepository {
 
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+
+        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+        this.validator = validatorFactory.getValidator();
     }
 
     @Override
     @Transactional
     public User save(User user) {
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
         parameterSource.registerSqlType("roles", Types.ARRAY);
 
@@ -106,7 +117,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public List<User> getAll() {
         List<User> users = jdbcTemplate.query(
-                "SELECT * FROM users ORDER BY name, email",ROW_MAPPER);
+                "SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
         Map<Integer, List<Role>> userRolesMap = new HashMap<>();
         jdbcTemplate.query(
                 "SELECT user_id, role FROM user_role",
