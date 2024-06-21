@@ -99,6 +99,12 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    public void getUserWithTwoRoles() {
+        User user = service.get(ADMIN_ID);
+        USER_MATCHER.assertMatch(user, admin);
+    }
+
+    @Test
     public void createWithException() throws Exception {
         Assume.assumeTrue(isNotJdbc());
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.USER)));

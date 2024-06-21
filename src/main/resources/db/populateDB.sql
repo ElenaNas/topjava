@@ -8,9 +8,10 @@ VALUES ('User', 'user@yandex.ru', 'password'),
        ('Admin', 'admin@gmail.com', 'admin'),
        ('Guest', 'guest@gmail.com', 'guest');
 
-INSERT INTO user_role (role, user_id)
-VALUES ('USER', 100000),
-       ('ADMIN', 100001);
+INSERT INTO user_role (user_id, role)
+VALUES (100000, 'USER'),
+       (100001, 'ADMIN'),
+       (100001, 'USER');
 
 INSERT INTO meal (date_time, description, calories, user_id)
 VALUES ('2020-01-30 10:00:00', 'Завтрак', 500, 100000),
