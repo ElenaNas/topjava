@@ -61,7 +61,7 @@ public class User extends AbstractNamedEntity {
     @BatchSize(size = 200)
     @JoinColumn
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     @Column(name = "calories_per_day", nullable = false, columnDefinition = "int default 2000")
     @Range(min = 10, max = 10000)
