@@ -78,12 +78,9 @@ public class JdbcUserRepository implements UserRepository {
                     User user = ROW_MAPPER.mapRow(resultSet, rowNum);
                     String role = resultSet.getString("role");
                     if (role != null) {
-                        if (user.getRoles() == null) {
-                            user.setRoles(new HashSet<>());
-                        }
-                        user.getRoles().add(Role.valueOf(role));
+                        user.setRoles(EnumSet.copyOf(Collections.singleton(Role.valueOf(role))));
                     } else {
-                        user.setRoles(new HashSet<>(Collections.singletonList(Role.USER)));
+                        user.setRoles(EnumSet.of(Role.USER));
                     }
                     return user;
                 }, id);
@@ -98,9 +95,10 @@ public class JdbcUserRepository implements UserRepository {
                     .filter(Objects::nonNull)
                     .forEach(roles -> {
                         if (user.getRoles() == null) {
-                            user.setRoles(new HashSet<>());
+                            user.setRoles(EnumSet.copyOf(roles));
+                        } else {
+                            user.getRoles().addAll(EnumSet.copyOf(roles));
                         }
-                        user.getRoles().addAll(roles);
                     });
             return user;
         }
@@ -124,7 +122,7 @@ public class JdbcUserRepository implements UserRepository {
     public List<User> getAll() {
         List<User> users = jdbcTemplate.query(
                 "SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
-        Map<Integer, EnumSet<Role>> userRolesMap = new HashMap<>();
+        Map<Integer, Set<Role>> userRolesMap = new HashMap<>();
         jdbcTemplate.query(
                 "SELECT user_id, role FROM user_role",
                 (resultSet, rowNum) -> {
@@ -136,7 +134,7 @@ public class JdbcUserRepository implements UserRepository {
                     return null;
                 });
         users.forEach(user -> {
-            EnumSet<Role> roles = userRolesMap.getOrDefault(user.getId(), EnumSet.noneOf(Role.class));
+            Set<Role> roles = userRolesMap.getOrDefault(user.getId(), EnumSet.noneOf(Role.class));
             user.setRoles(roles);
         });
         return users;
