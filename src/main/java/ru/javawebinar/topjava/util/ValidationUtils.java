@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.util;
 
 import javax.validation.*;
-import javax.validation.executable.ExecutableValidator;
 import java.util.Set;
 
 public class ValidationUtils {
@@ -14,9 +13,5 @@ public class ValidationUtils {
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
-    }
-
-    public static ExecutableValidator executableValidator() {
-        return validator.forExecutables();
     }
 }
