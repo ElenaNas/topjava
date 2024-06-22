@@ -70,38 +70,24 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public User get(int id) {
-        List<User> users = jdbcTemplate.query(
-                "SELECT u.*, ur.role FROM users u " +
-                        "LEFT JOIN user_role ur ON u.id = ur.user_id " +
-                        "WHERE u.id=?",
-                (resultSet, rowNum) -> {
-                    User user = ROW_MAPPER.mapRow(resultSet, rowNum);
-                    String role = resultSet.getString("role");
-                    if (role != null) {
-                        user.setRoles(EnumSet.copyOf(Collections.singleton(Role.valueOf(role))));
-                    } else {
-                        user.setRoles(EnumSet.of(Role.USER));
-                    }
-                    return user;
-                }, id);
+        String sql = "SELECT u.*, ur.role FROM users u " +
+                "LEFT JOIN user_role ur ON u.id = ur.user_id " +
+                "WHERE u.id=?";
 
-        if (users.isEmpty()) {
-            return null;
-        } else {
-            User user = users.get(0);
-            users.stream()
-                    .skip(1)
-                    .map(User::getRoles)
-                    .filter(Objects::nonNull)
-                    .forEach(roles -> {
-                        if (user.getRoles() == null) {
-                            user.setRoles(EnumSet.copyOf(roles));
-                        } else {
-                            user.getRoles().addAll(EnumSet.copyOf(roles));
-                        }
-                    });
+        return jdbcTemplate.query(sql, new Object[]{id}, resultSet -> {
+            User user = null;
+            while (resultSet.next()) {
+                if (user == null) {
+                    user = ROW_MAPPER.mapRow(resultSet, 0);
+                    user.setRoles(EnumSet.noneOf(Role.class));
+                }
+                String role = resultSet.getString("role");
+                if (role != null) {
+                    user.getRoles().add(Role.valueOf(role));
+                }
+            }
             return user;
-        }
+        });
     }
 
     @Override
