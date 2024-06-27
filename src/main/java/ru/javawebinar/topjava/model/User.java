@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.*;
 import org.hibernate.validator.constraints.Range;
@@ -27,6 +29,7 @@ import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
 })
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends AbstractNamedEntity {
 
     public static final String DELETE = "User.delete";
@@ -67,6 +70,7 @@ public class User extends AbstractNamedEntity {
     @Range(min = 10, max = 10000)
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("dateTime DESC")
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
