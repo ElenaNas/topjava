@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.util;
+package ru.javawebinar.topjava.web.StringToLocalDateTimeConverter;
 
 import org.springframework.core.convert.converter.Converter;
 
@@ -7,13 +7,14 @@ import java.time.format.DateTimeFormatter;
 
 public class StringToLocalTimeConverter implements Converter<String, LocalTime> {
 
-    private String timePattern = "HH:mm";
+    private static final String DEFAULT_TIME_PATTERN = "HH:mm";
+    private final String timePattern;
 
-    public String getTimePattern() {
-        return timePattern;
+    public StringToLocalTimeConverter() {
+        this.timePattern = DEFAULT_TIME_PATTERN;
     }
 
-    public void setTimePattern(String timePattern) {
+    public StringToLocalTimeConverter(String timePattern) {
         this.timePattern = timePattern;
     }
 

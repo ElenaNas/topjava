@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.util;
+package ru.javawebinar.topjava.web.StringToLocalDateTimeConverter;
 import org.springframework.core.convert.converter.Converter;
 
 import java.time.LocalDate;
@@ -6,13 +6,14 @@ import java.time.format.DateTimeFormatter;
 
 public class StringToLocalDateConverter implements Converter<String, LocalDate> {
 
-    private String datePattern = "yyyy-MM-dd";
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
+    private final String datePattern;
 
-    public String getDatePattern() {
-        return datePattern;
+    public StringToLocalDateConverter() {
+        this.datePattern = DATE_PATTERN;
     }
 
-    public void setDatePattern(String datePattern) {
+    public StringToLocalDateConverter(String datePattern) {
         this.datePattern = datePattern;
     }
 
