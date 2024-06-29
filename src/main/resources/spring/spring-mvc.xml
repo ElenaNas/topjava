@@ -50,8 +50,8 @@
         <property name="fallbackToSystemLocale" value="false"/>
     </bean>
 
-    <bean id="stringToLocalTimeConverter" class="ru.javawebinar.topjava.web.StringToLocalDateTimeConverter.StringToLocalTimeConverter"/>
-    <bean id="stringToLocalDateConverter" class="ru.javawebinar.topjava.web.StringToLocalDateTimeConverter.StringToLocalDateConverter"/>
+    <bean id="stringToLocalTimeConverter" class="ru.javawebinar.topjava.web.converter.StringToLocalTimeConverter"/>
+    <bean id="stringToLocalDateConverter" class="ru.javawebinar.topjava.web.converter.StringToLocalDateConverter"/>
 
     <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
