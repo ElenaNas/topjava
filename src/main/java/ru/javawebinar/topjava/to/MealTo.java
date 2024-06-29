@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
+import static ru.javawebinar.topjava.util.Util.getEffectiveClass;
+
 public class MealTo {
     private final Integer id;
 
@@ -59,5 +61,16 @@ public class MealTo {
                 ", calories=" + calories +
                 ", excess=" + excess +
                 '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getEffectiveClass(this) != getEffectiveClass(o)) return false;
+        return getId() != null && getId().equals(((MealTo) o).getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return getEffectiveClass(this).hashCode();
     }
 }
