@@ -21,13 +21,21 @@ public class MatcherFactory {
         return new Matcher<>(clazz, fieldsToIgnore);
     }
 
+    public static <T> Matcher<T> usingEqualsComparator(Class<T> clazz) {
+        return new Matcher<>(clazz);
+    }
+
     public static class Matcher<T> {
         private final Class<T> clazz;
         private final String[] fieldsToIgnore;
 
         private Matcher(Class<T> clazz, String... fieldsToIgnore) {
             this.clazz = clazz;
-            this.fieldsToIgnore = fieldsToIgnore;
+            this.fieldsToIgnore = fieldsToIgnore != null ? fieldsToIgnore : new String[0];
+        }
+
+        private Matcher(Class<T> clazz) {
+            this(clazz, new String[0]);
         }
 
         public void assertMatch(T actual, T expected) {

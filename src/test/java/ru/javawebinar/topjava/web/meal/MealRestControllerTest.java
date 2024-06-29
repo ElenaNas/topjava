@@ -46,7 +46,7 @@ class MealRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_MATCHER.contentJson(meals));
+                .andExpect(MEAL_TO_MATCHER.contentJson(MealsUtil.getTos(meals, MealsUtil.DEFAULT_CALORIES_PER_DAY)));
     }
 
     @Test
@@ -85,10 +85,10 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getBetween() throws Exception {
-        LocalDate startDate = meals.getFirst().getDateTime().toLocalDate();
-        LocalTime startTime = meals.getFirst().getDateTime().toLocalTime();
-        LocalDate endDate = meals.getLast().getDateTime().toLocalDate();
-        LocalTime endTime = meals.getLast().getDateTime().toLocalTime();
+        LocalDate startDate = LocalDate.of(2020, 1, 30);
+        LocalTime startTime = LocalTime.of(13, 0);
+        LocalDate endDate = LocalDate.of(2020, 1, 31);
+        LocalTime endTime = LocalTime.of(13, 0);
 
         List<MealTo> expectedMeals = MealsUtil.getFilteredTos(MealTestData.meals, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime);
 
