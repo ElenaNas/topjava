@@ -98,4 +98,11 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(MEAL_TO_MATCHER.contentJson(mealsToFilteredWithNullValues));
     }
+
+    @Test
+    void getBetweenWithEmptyParam() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "between?startDate=&endTime="))
+                .andExpect(status().isOk())
+                .andExpect(MEAL_TO_MATCHER.contentJson(mealsTo));
+    }
 }
