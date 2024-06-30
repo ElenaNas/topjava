@@ -37,3 +37,7 @@ curl -s -X PUT -d "{\"id\":100004,\"dateTime\":\"2020-01-30T10:02:00\",\"descrip
 # This command creates a new meal with the specified date, description, and calories.
 curl -s -X POST -d "{\"dateTime\":\"2020-02-01T18:00\",\"description\":\"Созданный ужин\",\"calories\":300}" -H "Content-Type: application/json;charset=UTF-8" http://localhost:8080/topjava/rest/meals
 
+# This command retrieves filtered meals when start/end data/time are not specified
+curl -X GET "http://localhost:8080/topjava/rest/meals/between?startDate=&endTime=" -H "Content-Type: application/json"
+
+
