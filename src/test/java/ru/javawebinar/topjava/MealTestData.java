@@ -31,15 +31,20 @@ public class MealTestData {
 
     public static final List<Meal> meals = List.of(meal7, meal6, meal5, meal4, meal3, meal2, meal1);
 
-    public static final List<MealTo>mealsTo=List.of(MealsUtil.createTo(meal7, true),MealsUtil.createTo(meal6, true), MealsUtil.createTo(meal5, true), MealsUtil.createTo(meal4, true)
-            , MealsUtil.createTo(meal3, false), MealsUtil.createTo(meal2, false), MealsUtil.createTo(meal1, false));
+    public static final List<MealTo> mealsTo = List.of(MealsUtil.createTo(meal7, true)
+            , MealsUtil.createTo(meal6, true), MealsUtil.createTo(meal5, true)
+            , MealsUtil.createTo(meal4, true), MealsUtil.createTo(meal3, false)
+            , MealsUtil.createTo(meal2, false), MealsUtil.createTo(meal1, false));
 
-    public static final List<MealTo> mealsToFiltered = List.of(MealsUtil.createTo(meal6, true), MealsUtil.createTo(meal2, false));
+    public static final List<MealTo> mealsToFiltered = List.of(MealsUtil.createTo(meal6, true)
+            , MealsUtil.createTo(meal2, false));
 
-    public static final List<MealTo> mealsToFilteredWithNullValues = List.of(MealsUtil.createTo(meal5, true), (MealsUtil.createTo(meal4, true)), (MealsUtil.createTo(meal1, false)));
+    public static final List<MealTo> mealsToFilteredWithNullValues = List.of(MealsUtil.createTo(meal5, true)
+            , (MealsUtil.createTo(meal4, true)), (MealsUtil.createTo(meal1, false)));
 
     public static Meal getNew() {
-        return new Meal(null, of(2020, Month.FEBRUARY, 1, 18, 0), "Созданный ужин", 300);
+        return new Meal(null, of(2020, Month.FEBRUARY, 1, 18, 0)
+                , "Созданный ужин", 300);
     }
 
     public static Meal getUpdated() {
