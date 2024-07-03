@@ -32,15 +32,4 @@ $(function () {
     );
 });
 
-function deleteRow(id) {
-    if (confirm('Are you sure?')) {
-        $.ajax({
-            url: ctx.ajaxUrl + id,
-            type: "DELETE"
-        }).done(function () {
-            updateTable();
-            successNoty("Deleted");
-        });
-    }
-}
 
