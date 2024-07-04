@@ -53,4 +53,9 @@ public abstract class AbstractUserController {
         log.info("getWithMeals {}", id);
         return service.getWithMeals(id);
     }
+
+    public void toggleUserStatus(int id, boolean enabled) {
+        log.info("toggleUserStatus {}", id);
+        service.toggleUserStatus(id, enabled);
+    }
 }
