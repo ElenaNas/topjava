@@ -33,9 +33,13 @@
                             <input class="form-control" type="time" name="endTime" id="endTime">
                         </div>
                         <div class="col-sm-2 mt-4">
-                            <button class="btn btn-primary btn-block" onclick="ctx.updateTable()">
+                            <button id="filter-button" type="button" class="btn btn-primary btn-block">
                                 <span class="fa fa-filter"></span>
                                 <spring:message code="meal.filter"/>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-block mt-2" onclick="resetFilters()">
+                                <span class="fa fa-times"></span>
+                                <spring:message code="meal.resetFilter"/>
                             </button>
                         </div>
                     </div>

@@ -15,6 +15,11 @@ function updateTableByData(data) {
     $('#datatable').DataTable().clear().rows.add(data).draw();
 }
 
+function resetFilters() {
+    document.getElementById("filter").reset();
+    ctx.updateTable();
+}
+
 $(function () {
     makeEditable(
         $("#datatable").DataTable({
@@ -30,6 +35,10 @@ $(function () {
             "order": [[ 0, "desc" ]]
         })
     );
-});
 
+    $("#filter-button").on("click", function (event) {
+        event.preventDefault();
+        ctx.updateTable();
+    });
+});
 
