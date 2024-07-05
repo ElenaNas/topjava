@@ -40,18 +40,6 @@ function updateTable() {
     });
 }
 
-function save() {
-    $.ajax({
-        type: "POST",
-        url: ctx.ajaxUrl,
-        data: form.serialize()
-    }).done(function () {
-        $("#editRow").modal("hide");
-        updateTable();
-        successNoty("Saved");
-    });
-}
-
 let failedNote;
 
 function closeNoty() {

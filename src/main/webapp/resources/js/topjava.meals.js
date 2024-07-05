@@ -2,7 +2,7 @@ const mealAjaxUrl = "profile/meals/";
 
 const ctx = {
     ajaxUrl: mealAjaxUrl,
-    updateTable: function () {
+    updateTableFiltered: function () {
         $.ajax({
             type: "GET",
             url: mealAjaxUrl + "filter",
@@ -17,7 +17,19 @@ function updateTableByData(data) {
 
 function resetFilters() {
     document.getElementById("filter").reset();
-    ctx.updateTable();
+    ctx.updateTableFiltered();
+}
+
+function save() {
+    $.ajax({
+        type: "POST",
+        url: ctx.ajaxUrl,
+        data: form.serialize()
+    }).done(function () {
+        $("#editRow").modal("hide");
+        ctx.updateTableFiltered();
+        successNoty("Saved");
+    });
 }
 
 $(function () {
@@ -38,7 +50,7 @@ $(function () {
 
     $("#filter-button").on("click", function (event) {
         event.preventDefault();
-        ctx.updateTable();
+        ctx.updateTableFiltered();
     });
 });
 
