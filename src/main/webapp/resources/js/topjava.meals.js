@@ -1,35 +1,24 @@
 const mealAjaxUrl = "profile/meals/";
 
 const ctx = {
-    ajaxUrl: mealAjaxUrl,
-    updateTableFiltered: function () {
-        $.ajax({
-            type: "GET",
-            url: mealAjaxUrl + "filter",
-            data: $("#filter").serialize()
-        }).done(updateTableByData);
-    }
+    ajaxUrl: mealAjaxUrl
 };
 
-function updateTableByData(data) {
-    $('#datatable').DataTable().clear().rows.add(data).draw();
+function updateTable() {
+    $.ajax({
+        type: "GET",
+        url: mealAjaxUrl + "filter",
+        data: $("#filter").serialize()
+    }).done(updateTableByData);
 }
 
 function resetFilters() {
     document.getElementById("filter").reset();
-    ctx.updateTableFiltered();
+    updateTableByData();
 }
 
-function save() {
-    $.ajax({
-        type: "POST",
-        url: ctx.ajaxUrl,
-        data: form.serialize()
-    }).done(function () {
-        $("#editRow").modal("hide");
-        ctx.updateTableFiltered();
-        successNoty("Saved");
-    });
+function updateTableByData(data) {
+    $('#datatable').DataTable().clear().rows.add(data).draw();
 }
 
 $(function () {
@@ -50,7 +39,7 @@ $(function () {
 
     $("#filter-button").on("click", function (event) {
         event.preventDefault();
-        ctx.updateTableFiltered();
+        updateTable();
     });
 });
 

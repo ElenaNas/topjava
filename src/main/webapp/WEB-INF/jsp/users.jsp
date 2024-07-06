@@ -19,7 +19,6 @@
         </button>
         <table class="table table-striped" id="datatable">
             <thead>
-            <tr data-user-toggled="${user.enabled}">
                 <th><spring:message code="user.name"/></th>
                 <th><spring:message code="user.email"/></th>
                 <th><spring:message code="user.roles"/></th>
@@ -27,11 +26,10 @@
                 <th><spring:message code="user.registered"/></th>
                 <th></th>
                 <th></th>
-            </tr>
             </thead>
             <c:forEach items="${requestScope.users}" var="user">
                 <jsp:useBean id="user" type="ru.javawebinar.topjava.model.User"/>
-                <tr id="${user.id}" data-user-toggled="${user.enabled}">
+                <tr id="${user.id}" class="<c:if test="${!user.enabled}">inactive-user</c:if>">
                     <td><c:out value="${user.name}"/></td>
                     <td><a href="mailto:${user.email}">${user.email}</a></td>
                     <td>${user.roles}</td>

@@ -46,6 +46,12 @@ $(function () {
     );
 });
 
+function updateTable() {
+    $.get(ctx.ajaxUrl, function (data) {
+        ctx.datatableApi.clear().rows.add(data).draw();
+    });
+}
+
 function toggle(toggle, id) {
     const toggled = toggle.is(":checked");
     $.ajax({
@@ -54,8 +60,7 @@ function toggle(toggle, id) {
         data: {enabled: toggled},
         success: function () {
             const row = toggle.closest("tr");
-            row.attr("data-user-toggled", toggled);
-            row.css("opacity", toggled ? 1 : 0.5);
+            row.toggleClass("inactive-user", !toggled);
             successNoty(toggled ? "Toggled On" : "Toggled Off");
         },
         error: function () {

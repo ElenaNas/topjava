@@ -17,26 +17,30 @@ function makeEditable(datatableApi) {
     $.ajaxSetup({cache: false});
 }
 
+function save() {
+    $.ajax({
+        type: "POST",
+        url: ctx.ajaxUrl,
+        data: form.serialize()
+    }).done(function () {
+        $("#editRow").modal("hide");
+        updateTable();
+        successNoty("Saved");
+    });
+}
+
 function add() {
     form.find(":input").val("");
     $("#editRow").modal();
 }
 
 function deleteRow(id) {
-    if (confirm('Are you sure?')) {
-        $.ajax({
-            url: ctx.ajaxUrl + id,
-            type: "DELETE"
-        }).done(function () {
-            updateTable();
-            successNoty("Deleted");
-        });
-    }
-}
-
-function updateTable() {
-    $.get(ctx.ajaxUrl, function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
+    $.ajax({
+        url: ctx.ajaxUrl + id,
+        type: "DELETE"
+    }).done(function () {
+        updateTable();
+        successNoty("Deleted");
     });
 }
 
