@@ -103,8 +103,5 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         assertFalse(userService.get(USER_ID).isEnabled());
-
-        User updatedUser = userService.get(USER_ID);
-        assertFalse(updatedUser.isEnabled());
     }
 }
