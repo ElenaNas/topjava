@@ -13,12 +13,8 @@ function updateTable() {
 }
 
 function resetFilters() {
-    document.getElementById("filter").reset();
-    updateTableByData();
-}
-
-function updateTableByData(data) {
-    $('#datatable').DataTable().clear().rows.add(data).draw();
+    $("#filter")[0].reset();
+    $.get(mealAjaxUrl, updateTableByData);
 }
 
 $(function () {

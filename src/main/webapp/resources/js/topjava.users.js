@@ -2,8 +2,13 @@ const userAjaxUrl = "admin/users/";
 
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
-    ajaxUrl: userAjaxUrl
+    ajaxUrl: userAjaxUrl,
+    updateTable: updateTable
 };
+
+function updateTable() {
+    $.get(userAjaxUrl, updateTableByData);
+}
 
 // $(document).ready(function () {
 $(function () {
@@ -46,12 +51,6 @@ $(function () {
     );
 });
 
-function updateTable() {
-    $.get(ctx.ajaxUrl, function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
-    });
-}
-
 function toggle(toggle, id) {
     const toggled = toggle.is(":checked");
     $.ajax({
@@ -69,11 +68,3 @@ function toggle(toggle, id) {
         }
     });
 }
-
-$(function () {
-    $.extend(true, $.fn.dataTable.defaults, {
-        columnDefs: [
-            {targets: 'inactive-user', className: 'inactive-user'}
-        ]
-    });
-});
