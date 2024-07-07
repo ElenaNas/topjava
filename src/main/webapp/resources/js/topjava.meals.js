@@ -1,7 +1,8 @@
 const mealAjaxUrl = "profile/meals/";
 
 const ctx = {
-    ajaxUrl: mealAjaxUrl
+    ajaxUrl: mealAjaxUrl,
+    updateTable: updateTable
 };
 
 function updateTable() {
@@ -38,4 +39,3 @@ $(function () {
         updateTable();
     });
 });
-

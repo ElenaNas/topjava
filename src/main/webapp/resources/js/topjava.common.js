@@ -24,7 +24,7 @@ function save() {
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        updateTable();
+        ctx.updateTable();
         successNoty("Saved");
     });
 }
@@ -41,6 +41,8 @@ function deleteRow(id) {
     }).done(function () {
         ctx.updateTable();
         successNoty("Deleted");
+    }).fail(function (jqXHR) {
+        failNoty(jqXHR);
     });
 }
 
@@ -74,5 +76,5 @@ function failNoty(jqXHR) {
         type: "error",
         layout: "bottomRight"
     });
-    failedNote.show()
+    failedNote.show();
 }
