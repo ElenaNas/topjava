@@ -60,7 +60,6 @@ public class UserService {
     public void toggleUserStatus(int id, boolean enabled) {
         User user = get(id);
         user.setEnabled(enabled);
-        repository.save(user);
         checkNotFoundWithId(repository.updateEnabledStatus(id, enabled), id);
     }
 }
