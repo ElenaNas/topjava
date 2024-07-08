@@ -60,6 +60,6 @@ public class UserService {
     public void toggleUserStatus(int id, boolean enabled) {
         User user = get(id);
         user.setEnabled(enabled);
-        update(user);
+        repository.save(user);
     }
 }
