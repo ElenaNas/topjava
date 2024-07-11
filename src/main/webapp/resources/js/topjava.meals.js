@@ -20,11 +20,21 @@ function clearFilter() {
 $(function () {
     makeEditable(
         $("#datatable").DataTable({
+            "ajax": {
+                "url": mealAjaxUrl,
+                "dataSrc": ""
+            },
             "paging": false,
             "info": true,
             "columns": [
                 {
-                    "data": "dateTime"
+                    "data": "dateTime",
+                    "render": function (data, type, row) {
+                        if (type === "display") {
+                            return formatDateTime(data);
+                        }
+                        return data;
+                    }
                 },
                 {
                     "data": "description"
@@ -33,20 +43,36 @@ $(function () {
                     "data": "calories"
                 },
                 {
-                    "defaultContent": "Edit",
-                    "orderable": false
+                    "orderable": false,
+                    "defaultContent": "",
+                    "render": renderEditBtn
                 },
                 {
-                    "defaultContent": "Delete",
-                    "orderable": false
+                    "orderable": false,
+                    "defaultContent": "",
+                    "render": renderDeleteBtn
                 }
             ],
             "order": [
-                [
-                    0,
-                    "desc"
-                ]
-            ]
+                [0, "desc"]
+            ],
+            "createdRow": function (row, data, dataIndex) {
+                $(row).attr("data-meal-excess", data.excess);
+            }
         })
     );
 });
+function formatDateTime(dateTime) {
+    const dateOptions = {
+        year: 'numeric', month: 'numeric', day: 'numeric'
+    };
+    const timeOptions = {
+        hour: 'numeric', minute: 'numeric',
+        hour12: false
+    };
+
+    const date = new Date(dateTime).toLocaleDateString('en-US', dateOptions);
+    const time = new Date(dateTime).toLocaleTimeString('en-US', timeOptions);
+
+    return `${date} ${time}`;
+}
