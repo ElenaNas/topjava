@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="webjars/datatables/1.13.5/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="webjars/noty/3.1.4/lib/noty.css"/>
     <link rel="shortcut icon" href="resources/images/icon-meal.png">
+    <link rel="stylesheet" href="webjars/datetimepicker/2.5.20-1/jquery.datetimepicker.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css">
 
     <%--http://stackoverflow.com/a/24070373/548473--%>
     <script src="webjars/jquery/3.7.1/jquery.min.js" defer></script>
@@ -20,4 +23,5 @@
     <script src="webjars/datatables/1.13.5/js/jquery.dataTables.min.js" defer></script>
     <script src="webjars/datatables/1.13.5/js/dataTables.bootstrap4.min.js" defer></script>
     <script src="webjars/noty/3.1.4/lib/noty.min.js" defer></script>
+    <script src="webjars/datetimepicker/2.5.20-1/build/jquery.datetimepicker.full.min.js" defer></script>
 </head>

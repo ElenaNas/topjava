@@ -1,5 +1,17 @@
 const mealAjaxUrl = "profile/meals/";
 
+$('#startDate, #endDate').datetimepicker({
+    timepicker: false,
+    format: 'Y-m-d',
+    formatDate: 'Y-m-d'
+});
+
+$('#startTime, #endTime').datetimepicker({
+    datepicker: false,
+    format: 'H:i',
+    step: 15
+});
+
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
     ajaxUrl: mealAjaxUrl,
@@ -61,18 +73,26 @@ $(function () {
             }
         })
     );
+
+    initializeDateTimePickersForMeals();
 });
+
 function formatDateTime(dateTime) {
-    const dateOptions = {
-        year: 'numeric', month: 'numeric', day: 'numeric'
-    };
-    const timeOptions = {
+    const options = {
+        year: 'numeric', month: 'numeric', day: 'numeric',
         hour: 'numeric', minute: 'numeric',
         hour12: false
     };
 
-    const date = new Date(dateTime).toLocaleDateString('en-US', dateOptions);
-    const time = new Date(dateTime).toLocaleTimeString('en-US', timeOptions);
+    return new Date(dateTime).toLocaleString('en-US', options);
+}
 
-    return `${date} ${time}`;
+function initializeDateTimePickersForMeals() {
+    $('#dateTime').datetimepicker({
+        format: 'Y-m-d H:i'
+    });
+
+    $('#editRow').on('show.bs.modal', function () {
+        $('#dateTime').datetimepicker('reset');
+    });
 }
