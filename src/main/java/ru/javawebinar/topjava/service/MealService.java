@@ -1,7 +1,5 @@
 package ru.javawebinar.topjava.service;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -18,7 +16,6 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.atStartOfNextDayOrMax;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class MealService {
 
     private final MealRepository repository;
