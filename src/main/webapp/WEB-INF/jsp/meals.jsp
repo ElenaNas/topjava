@@ -7,6 +7,7 @@
 <body>
 <script type="text/javascript" src="resources/js/topjava.common.js" defer></script>
 <script type="text/javascript" src="resources/js/topjava.meals.js" defer></script>
+<script src="resources/js/topjava.i18n.js" defer></script>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
 <div class="jumbotron pt-4">
@@ -111,13 +112,4 @@
 </div>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
-<script type="text/javascript">
-    const i18n = {};
-    i18n["addTitle"] = '<spring:message code="meal.add"/>';
-    i18n["editTitle"] = '<spring:message code="meal.edit"/>';
-
-    <c:forEach var="key" items='${["common.saved","common.errorStatus", "common.deleted"]}'>
-    i18n["${key}"] = "<spring:message code="${key}"/>";
-    </c:forEach>
-</script>
 </html>
