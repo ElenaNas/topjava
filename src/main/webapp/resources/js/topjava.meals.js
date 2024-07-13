@@ -78,13 +78,7 @@ $(function () {
 });
 
 function formatDateTime(dateTime) {
-    const options = {
-        year: 'numeric', month: 'numeric', day: 'numeric',
-        hour: 'numeric', minute: 'numeric',
-        hour12: false
-    };
-
-    return new Date(dateTime).toLocaleString('en-US', options);
+    return moment(dateTime).format('YYYY-MM-DD HH:mm');
 }
 
 function initializeDateTimePickersForMeals() {
