@@ -87,6 +87,6 @@ function initializeDateTimePickersForMeals() {
     });
 
     $('#editRow').on('show.bs.modal', function () {
-        $('#dateTime').datetimepicker('reset');
+        $('#dateTime').datetimepicker('set');
     });
 }
