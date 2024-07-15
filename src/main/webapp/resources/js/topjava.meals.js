@@ -78,7 +78,7 @@ $(function () {
 });
 
 function formatDateTime(dateTime) {
-    return moment(dateTime).format('YYYY-MM-DD HH:mm');
+    return date.replace('T', ' ').substr(0, 16);
 }
 
 function initializeDateTimePickersForMeals() {
