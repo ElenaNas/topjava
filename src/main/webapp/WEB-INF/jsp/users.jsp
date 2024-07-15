@@ -10,7 +10,7 @@
 <script src="resources/js/topjava.users.js" defer></script>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <jsp:include page="fragments/i18n.jsp">
-    <jsp:param name="page" value="meal"/>
+    <jsp:param name="page" value="user"/>
 </jsp:include>
 
 <div class="jumbotron pt-4">
