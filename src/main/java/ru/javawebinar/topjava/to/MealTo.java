@@ -1,29 +1,18 @@
 package ru.javawebinar.topjava.to;
 
-import org.hibernate.validator.constraints.Range;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class MealTo extends BaseTo {
 
-    @NotNull
-    private LocalDateTime dateTime;
+    private final LocalDateTime dateTime;
 
-    @NotBlank
-    @Size(min = 2, max = 120)
-    private String description;
+    private final String description;
 
-    @Range(min = 10, max = 5000)
-    private int calories;
+    private final int calories;
 
-    private boolean excess;
-
-    public MealTo(){}
+    private final boolean excess;
 
     @ConstructorProperties({"id", "dateTime", "description", "calories", "excess"})
     public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
@@ -44,22 +33,6 @@ public class MealTo extends BaseTo {
 
     public int getCalories() {
         return calories;
-    }
-
-    public void setDateTime(@NotBlank LocalDateTime dateTime) {
-        this.dateTime = dateTime;
-    }
-
-    public void setDescription(@NotBlank @Size(min = 2, max = 120) String description) {
-        this.description = description;
-    }
-
-    public void setCalories(@Size(min = 10, max = 5000) int calories) {
-        this.calories = calories;
-    }
-
-    public void setExcess(boolean excess) {
-        this.excess = excess;
     }
 
     public boolean isExcess() {
