@@ -85,8 +85,4 @@ function initializeDateTimePickersForMeals() {
     $('#dateTime').datetimepicker({
         format: 'Y-m-d H:i'
     });
-
-    $('#editRow').on('show.bs.modal', function () {
-        $('#dateTime').datetimepicker('set');
-    });
 }
