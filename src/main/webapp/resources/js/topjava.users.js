@@ -79,7 +79,7 @@ $(function () {
         ],
         "createdRow": function (row, data, dataIndex) {
             if (!data.enabled) {
-A                $(row).attr("data-user-enabled", false);
+                $(row).attr("data-user-enabled", false);
             }
         }
     });
