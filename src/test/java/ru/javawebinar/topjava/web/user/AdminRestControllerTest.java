@@ -149,10 +149,33 @@ class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void registerWithInvalidData() throws Exception {
+        User invalid = new User(null, null, "", "12345", 0, Role.USER);
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(jsonWithPassword(invalid, "12345")))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void updateWithInvalidData() throws Exception {
+        User invalid = new User(user);
+        invalid.setCaloriesPerDay(0);
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .content(jsonWithPassword(invalid, "password")))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     @Transactional(propagation = Propagation.NEVER)
     void updateWithDuplicateEmail() throws Exception {
         User updatedDuplicate = new User(user);
-        updatedDuplicate.setEmail("guest@gmail.com");
+        updatedDuplicate.setEmail(guest.getEmail());
         perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
@@ -165,7 +188,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
     @Transactional (propagation = Propagation.NEVER)
     @Test
     void createWithDuplicateEmail() throws Exception {
-        User createdDuplicate = new User(null, "New User with Duplicate email", "user@yandex.ru", "123456", 2000, Role.USER);
+        User createdDuplicate = new User(null, "New User with Duplicate email", user.getEmail(), "123456", 2000, Role.USER);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
