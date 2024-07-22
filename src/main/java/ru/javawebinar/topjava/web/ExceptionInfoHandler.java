@@ -22,7 +22,6 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 
@@ -68,14 +67,13 @@ public class ExceptionInfoHandler {
 
     }
 
-
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
     @ExceptionHandler(BindException.class)
     public ErrorInfo bindValidationError(HttpServletRequest req, BindException e) {
-        String detail = e.getBindingResult().getFieldErrors().stream()
+        String[] details = e.getBindingResult().getFieldErrors().stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
-                .collect(Collectors.joining("<br>"));
-        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, detail);
+                .toArray(String[]::new);
+        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, details);
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
@@ -96,12 +94,7 @@ public class ExceptionInfoHandler {
 
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType, String... detail) {
-        Throwable rootCause = ValidationUtil.getRootCause(e);
-        if (logException) {
-            log.error(errorType + " at request " + req.getRequestURL(), rootCause);
-        } else {
-            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
-        }
-        return new ErrorInfo(req.getRequestURL(), errorType, detail);
+        Throwable rootCause = ValidationUtil.logAndGetRootCause(log, req, e, logException, errorType);
+        return new ErrorInfo(req.getRequestURL(), errorType, detail.length != 0 ? detail : new String[]{ValidationUtil.getMessage(rootCause)});
     }
 }
