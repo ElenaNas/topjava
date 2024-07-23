@@ -24,15 +24,14 @@ public class ProfileUIController extends AbstractUserController {
 
     @PostMapping
     public String updateProfile(@Valid UserTo userTo, BindingResult result, SessionStatus status) {
+        if (result.hasErrors()) {
+            return "profile";
+        }
         try {
-            if (result.hasErrors()) {
-                return "profile";
-            } else {
-                super.update(userTo, SecurityUtil.authUserId());
-                SecurityUtil.get().setTo(userTo);
-                status.setComplete();
-                return "redirect:/meals";
-            }
+            super.update(userTo, SecurityUtil.authUserId());
+            SecurityUtil.get().setTo(userTo);
+            status.setComplete();
+            return "redirect:/meals";
         } catch (DataIntegrityViolationException exception) {
             result.rejectValue("email", "exception.user.duplicateEmail");
             return "profile";
@@ -48,17 +47,17 @@ public class ProfileUIController extends AbstractUserController {
 
     @PostMapping("/register")
     public String saveRegister(@Valid UserTo userTo, BindingResult result, SessionStatus status, ModelMap model) {
+        if (result.hasErrors()) {
+            model.addAttribute("register", true);
+            return "profile";
+        }
         try {
-            if (result.hasErrors()) {
-                model.addAttribute("register", true);
-                return "profile";
-            } else {
-                super.create(userTo);
-                status.setComplete();
-                return "redirect:/login?message=app.registered&username=" + userTo.getEmail();
-            }
+            super.create(userTo);
+            status.setComplete();
+            return "redirect:/login?message=app.registered&username=" + userTo.getEmail();
         } catch (DataIntegrityViolationException exception) {
             result.rejectValue("email", "exception.user.duplicateEmail");
+            model.addAttribute("register", true);
             return "profile";
         }
     }
