@@ -29,7 +29,9 @@ public class EmailValidator implements Validator {
         ValidEmail user = ((ValidEmail) target);
         User newUser = repository.getByEmail(user.getEmail());
         if (newUser != null) {
-            errors.rejectValue("email", ExceptionInfoHandler.EXCEPTION_DUPLICATE_EMAIL);
+            if (!newUser.getEmail().equals(user.getEmail())) {
+                errors.rejectValue("email", ExceptionInfoHandler.EXCEPTION_DUPLICATE_EMAIL);
+            }
         }
     }
 }
