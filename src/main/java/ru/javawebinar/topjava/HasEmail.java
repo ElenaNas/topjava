@@ -1,5 +1,5 @@
 package ru.javawebinar.topjava;
 
-public interface ValidEmail extends HasId {
+public interface HasEmail extends HasId{
     String getEmail();
 }
