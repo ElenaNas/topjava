@@ -27,11 +27,11 @@ public class EmailValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         HasEmail user = ((HasEmail) target);
-        User newUser = repository.getByEmail(user.getEmail());
-        if (newUser != null) {
+        User existedUser = repository.getByEmail(user.getEmail());
+        if (existedUser != null) {
             if (user.getId() != null) {
-                int id = newUser.id();
-                if (user.getId() != null && id == user.id()){
+                int id = existedUser.id();
+                if (user.getId() != null && id == user.id()) {
                     return;
                 }
                 errors.rejectValue("email", ExceptionInfoHandler.EXCEPTION_DUPLICATE_EMAIL);
