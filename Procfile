@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes:target/dependency/* ru.javawebinar.topjava
+web: java -jar target/topjava.jar
