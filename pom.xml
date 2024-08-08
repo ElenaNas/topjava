@@ -88,6 +88,9 @@
                 <version>3.2.5</version>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
+                    <argLine>
+                        --add-opens java.base/java.io=ALL-UNNAMED
+                    </argLine>
                 </configuration>
             </plugin>
 
@@ -132,6 +135,21 @@
                     </deployables>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <mainClass>YourMainClass</mainClass>
+                    <commandlineArgs>
+                        <arg>--add-opens</arg>
+                        <arg>java.base/java.io=ALL-UNNAMED</arg>
+                    </commandlineArgs>
+                </configuration>
+            </plugin>
+
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
